@@ -1,0 +1,17 @@
+# 仓库根级忽略（前端应用自身的忽略规则见 web/.gitignore）
+
+# 系统 / 编辑器
+.DS_Store
+*.log
+
+# 本地工具与部署产物（含本地路径/服务器信息，不入库）
+.claude/
+deploy/
+
+# Blender 自动备份
+*.blend1
+*.blend2
+
+# Blender 源文件体积超过 GitHub 单文件 100MB 限制，仅保留本地，不入库
+# （导出后的 blender/*.glb 仍会入库，供网页实际加载）
+blender/*.blend

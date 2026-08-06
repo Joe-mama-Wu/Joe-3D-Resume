@@ -1,0 +1,70 @@
+import type { SVGProps } from 'react'
+
+// 简化的单色平台图标（currentColor），契合深色画面。
+// 如需官方多彩 logo，替换对应 path 即可。
+
+export function DouyinIcon(props: SVGProps<SVGSVGElement>) {
+  // 音符 + 旗 —— 抖音的标志性符号
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M13 3h3a5 5 0 0 0 4.6 4.98V11A8 8 0 0 1 16 9.6V15a6 6 0 1 1-6-6c.34 0 .67.03 1 .08v3.12A3 3 0 1 0 13 15V3z" />
+    </svg>
+  )
+}
+
+export function BilibiliIcon(props: SVGProps<SVGSVGElement>) {
+  // 电视机 + 两根天线
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M7 3l3 3M17 3l-3 3" />
+      <rect x="3" y="6" width="18" height="13" rx="3.5" />
+      <path d="M9 11v2M15 11v2" />
+    </svg>
+  )
+}
+
+export function XiaohongshuIcon(props: SVGProps<SVGSVGElement>) {
+  // 圆角方块 + 爱心
+  return (
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 16.2c-2.1-1.5-4-3-4-5.1A2.1 2.1 0 0 1 12 9.9a2.1 2.1 0 0 1 4 1.2c0 2.1-1.9 3.6-4 5.1z" fill="currentColor" />
+    </svg>
+  )
+}
+
+export function LinkedinIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.97 1.97 0 1 0 0 3.94 1.97 1.97 0 0 0 0-3.94ZM20.44 20h-3.37v-5.93c0-1.41-.03-3.23-1.97-3.23-1.98 0-2.28 1.54-2.28 3.13V20H9.45V8.5h3.24v1.57h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.5 2.25 4.5 5.18V20Z" />
+    </svg>
+  )
+}
+
+export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+export function MailIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="2.5" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  )
+}
+
+export const SOCIAL_ICONS = {
+  douyin: DouyinIcon,
+  bilibili: BilibiliIcon,
+  xiaohongshu: XiaohongshuIcon,
+  linkedin: LinkedinIcon,
+  instagram: InstagramIcon,
+  email: MailIcon,
+}
