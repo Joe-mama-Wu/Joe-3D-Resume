@@ -4,7 +4,7 @@
 
 一个基于 React Three Fiber + TypeScript 的滚动式 3D 个人简历示例。页面由一段固定的 3D 背景（人物模型 + 相机动画）和前端可滚动的 HTML 内容组成，便于展示履历与作品集。
 
-**在线演示**：见仓库发布的 Pages（如果已部署）。
+**在线演示**：[https://joe-mama-wu.github.io/Joe-3D-Resume/](https://joe-mama-wu.github.io/Joe-3D-Resume/)
 
 **快速概览**：前端代码在 [web/](web)，主要入口为 [web/src/App.tsx](web/src/App.tsx)。开发、构建与部署都在 `web/` 目录下进行。
 
