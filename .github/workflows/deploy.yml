@@ -1,41 +1,5 @@
 name: Deploy to GitHub Pages
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-
-jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        working-directory: web
-        run: |
-          npm ci
-
-      - name: Build
-        working-directory: web
-        run: |
-          npm run build
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./web/dist
-          publish_branch: gh-pages
-name: Deploy to GitHub Pages
-
 # 推送到 main 即自动构建 web/ 并发布到 GitHub Pages；也可在 Actions 页手动触发
 on:
   push:
