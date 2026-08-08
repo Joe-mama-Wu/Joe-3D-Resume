@@ -107,13 +107,11 @@ function Lights() {
 // me.glb：模型 + glb 自带相机动画（滚动分 5 段擦除）+ 自动对焦 + 眼睛跟随
 function Man2({
   focusRef,
-  dofTargetRef,
   frameRef,
   dofBokehRef,
   dofRangeRef,
 }: {
   focusRef: MutableRefObject<THREE.Vector3>
-  dofTargetRef: MutableRefObject<THREE.Vector3>
   frameRef: MutableRefObject<number>
   dofBokehRef: MutableRefObject<number>
   dofRangeRef: MutableRefObject<number>
@@ -145,13 +143,6 @@ function Man2({
     smooth: 0.44,
     crossEye: 45,
     crossRadius: 0.25,
-  }
-
-  // 鼠标对焦：鼠标射线打到模型上哪，DoF 焦点就跟到哪（缓动追踪，避免硬切）；
-  // 打不到模型（移到背景/文字区）时回落到履历锚点自动对焦。移动端无鼠标，禁用。
-  const mouseFocus = {
-    enabled: true,
-    ease: 0.15,
   }
 
   const get = useThree((s) => s.get)
@@ -301,10 +292,6 @@ function Man2({
   const camScl = useRef(new THREE.Vector3())
   const paraEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'))
   const paraQuat = useRef(new THREE.Quaternion())
-
-  // 鼠标对焦用：射线 + NDC 坐标（复用，避免每帧分配）
-  const mouseRay = useRef(new THREE.Raycaster())
-  const mouseNdc = useRef(new THREE.Vector2())
 
   useFrame((_, dt) => {
     const a = 1 - Math.pow(cam.damping, dt)
@@ -471,21 +458,6 @@ function Man2({
       }
     }
 
-    // 3c) 鼠标对焦：射线从当前相机穿过鼠标位置打模型，命中点缓动追踪为 DoF 焦点；
-    //     打不到（移出模型轮廓 / 移动端无鼠标）则缓动回落到履历自动对焦点 focusRef。
-    if (dofTargetRef) {
-      let hitPoint: THREE.Vector3 | null = null
-      if (mouseFocus.enabled && !isMobile.current && glbCam && camera.isPerspectiveCamera) {
-        camera.updateMatrixWorld()
-        mouseNdc.current.set(mouse.current.x, mouse.current.y)
-        mouseRay.current.setFromCamera(mouseNdc.current, camera)
-        const hits = mouseRay.current.intersectObject(model, true)
-        if (hits.length > 0) hitPoint = hits[0].point
-      }
-      const dofEase = 1 - Math.pow(mouseFocus.ease, dt)
-      dofTargetRef.current.lerp(hitPoint ?? focusRef.current, dofEase)
-    }
-
     // 4) 眼睛跟随（用当前激活相机做屏幕投影）；移动端 / 触屏则跳过
     if (!eye.enabled || eyes.length === 0 || isMobile.current) return
     const sx = eye.invertX ? -1 : 1
@@ -531,15 +503,14 @@ function Man2({
 }
 
 // 后处理：DepthOfField → Bloom → SMAA。
-// DoF 焦点逐帧跟随 dofTargetRef（鼠标射线命中模型处，缓动追踪；打不到则回落履历自动对焦）；
-// 30–220 帧间收紧清晰范围、加大虚化。
+// DoF 焦点逐帧跟随 focusRef（自动对焦）；30–220 帧间收紧清晰范围、加大虚化。
 function Post2({
-  dofTargetRef,
+  focusRef,
   frameRef,
   dofBokehRef,
   dofRangeRef,
 }: {
-  dofTargetRef: MutableRefObject<THREE.Vector3>
+  focusRef: MutableRefObject<THREE.Vector3>
   frameRef: MutableRefObject<number>
   dofBokehRef: MutableRefObject<number>
   dofRangeRef: MutableRefObject<number>
@@ -550,8 +521,8 @@ function Post2({
     dof: true,
     startBokeh: 7.4,
     startRange: 2.0,
-    transitionBokeh: 11.0, // 履历区虚化强度（背景/前景离焦程度）
-    transitionRange: 0.15, // 履历区清晰范围：窄，配合鼠标对焦——只有指到的地方清晰，其余离焦模糊
+    focusBokeh: 11.0,
+    focusRange: 0.15,
     startBlendFrame: 48,
     endBlendFrame: RESUME_FRAMES - 50, // 末节点附近回到"起始帧"景深档（原 250−50=200）
   }
@@ -560,7 +531,7 @@ function Post2({
   useFrame(() => {
     const e = dofRef.current
     if (!e) return
-    if (e.target && dofTargetRef) e.target.copy(dofTargetRef.current)
+    if (e.target && focusRef) e.target.copy(focusRef.current)
     // 权重 w=1 用"开始帧档"，w=0 用"聚焦点档"。
     // 开头(f→0)和末节点(f→RESUME_FRAMES)都取开始帧档；中间各节点取聚焦点档。
     const f = frameRef ? frameRef.current : 0
@@ -570,12 +541,11 @@ function Post2({
     if (dofBokehRef && dofBokehRef.current >= 0) {
       // glb 自带逐锚点景深参数（intro3d 导出）：直接采用，忠实还原 intro3d 的虚化强度/清晰范围（bokeh=0 即该点关景深）。
       e.bokehScale = dofBokehRef.current
-      if (e.cocMaterial) e.cocMaterial.focusRange = Math.max(1e-4, dofRangeRef ? dofRangeRef.current : post.transitionRange)
+      if (e.cocMaterial) e.cocMaterial.focusRange = Math.max(1e-4, dofRangeRef ? dofRangeRef.current : post.focusRange)
     } else {
-      // 老 glb（无逐锚点参数）：沿用原全局帧混合档位，焦点（focusRef，逐帧对准当前锚点）始终清晰，
-      // 背景/前景按 transitionBokeh 离焦——即经典景深效果，而非按节点开关清晰度。
-      e.bokehScale = THREE.MathUtils.lerp(post.transitionBokeh, post.startBokeh, w)
-      if (e.cocMaterial) e.cocMaterial.focusRange = THREE.MathUtils.lerp(post.transitionRange, post.startRange, w)
+      // 老 glb（无逐锚点参数）：沿用原全局帧混合档位。
+      e.bokehScale = THREE.MathUtils.lerp(post.focusBokeh, post.startBokeh, w)
+      if (e.cocMaterial) e.cocMaterial.focusRange = THREE.MathUtils.lerp(post.focusRange, post.startRange, w)
     }
   })
 
@@ -585,8 +555,8 @@ function Post2({
         <DepthOfField
           ref={dofRef}
           target={[0, 1.3, 0]}
-          worldFocusRange={post.transitionRange}
-          bokehScale={post.transitionBokeh}
+          worldFocusRange={post.focusRange}
+          bokehScale={post.focusBokeh}
           height={480}
         />
       ) : null) as any}
@@ -604,8 +574,6 @@ function Post2({
 // 场景根组件：展示 me.glb（相机由 glb 动画 + 滚动驱动）
 export default function Scene() {
   const focusRef = useRef(new THREE.Vector3(0, 1.3, 0))
-  // DoF 实际焦点：鼠标射线命中模型处（缓动追踪），打不到时回落到 focusRef。Man2 每帧写、Post2 读。
-  const dofTargetRef = useRef(new THREE.Vector3(0, 1.3, 0))
   const frameRef = useRef(0)
   // 逐锚点景深（intro3d 导出的 glb 携带）：Man2 每帧写、Post2 读。dofBokeh=-1 表示无参数 → Post2 走旧全局混合。
   const dofBokehRef = useRef(-1)
@@ -616,16 +584,10 @@ export default function Scene() {
 
       <Suspense fallback={null}>
         <Lights />
-        <Man2
-          focusRef={focusRef}
-          dofTargetRef={dofTargetRef}
-          frameRef={frameRef}
-          dofBokehRef={dofBokehRef}
-          dofRangeRef={dofRangeRef}
-        />
+        <Man2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
       </Suspense>
 
-      <Post2 dofTargetRef={dofTargetRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
+      <Post2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
     </>
   )
 }
