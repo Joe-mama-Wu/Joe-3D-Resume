@@ -15,3 +15,6 @@ deploy/
 # Blender 源文件体积超过 GitHub 单文件 100MB 限制，仅保留本地，不入库
 # （导出后的 blender/*.glb 仍会入库，供网页实际加载）
 blender/*.blend
+
+# 作品原始素材（未压缩，含 >100MB 视频）；网页用的是压缩后的 web/public/works/
+Portfolio/

@@ -2,7 +2,9 @@
 //
 // frontmatter（--- 之间）字段（均可选）：
 //   title   标题（缺省回退列表里的作品名）
-//   banner  顶部 banner 图路径（如 /works/guqin/banner.jpg；缺省用渐变占位）
+//   banner  顶部 banner 图路径（如 /works/guqin/banner.jpg；缺省用渐变占位）；
+//           .mp4 / .webm 结尾时渲染为静音循环视频
+//   poster  视频 banner 的首帧封面（可选）
 //   year    年份
 //   role    角色 / 担当
 //   tags    标签数组：[互动项目, 虎啸奖]
@@ -16,6 +18,7 @@ export interface WorkDoc {
   slug: string
   title?: string
   banner?: string
+  poster?: string
   year?: string
   role?: string
   tags?: string[]

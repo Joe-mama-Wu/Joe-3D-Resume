@@ -25,6 +25,16 @@ public/works/*
 !public/works/tsdsale/
 !public/works/web-navigation/
 !public/works/web-checkout/
+!public/works/orca-robotic-hand/
+!public/works/deepsort-mot/
+!public/works/yolo-traffic-light/
+!public/works/lane-keep-assist/
+!public/works/stereo-camera/
+!public/works/lidar-perception/
+!public/works/gazebo-slam/
+!public/works/fanuc-roboguide/
+!public/works/bytetrack-mot/
+!public/works/siamfc-sot/
 
 # 压缩脚本日志
 scripts/compress-media.log

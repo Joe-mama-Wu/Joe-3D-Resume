@@ -1,0 +1,23 @@
+# 网站访问记录 Worker：接收网页发来的访问事件，存进 D1；带密码的查看页在 Worker 根路径 /
+# 部署步骤见 README.md
+name = "portfolio-analytics"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+# 只接受这些来源（网页 Origin）发来的记录，逗号分隔；本地调试的来源写在 .dev.vars 里
+ALLOWED_ORIGINS = "https://joe-mama-wu.github.io"
+# 查看页的时间显示时区
+TIMEZONE = "America/Toronto"
+# 记录保留天数，超期由每日定时任务删除
+RETENTION_DAYS = "180"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-visits"
+# `npx wrangler d1 create portfolio-visits` 输出的 database_id 填到这里
+database_id = "61f0ef55-eb8b-4418-85be-11d3cb952cdd"
+
+# 每天 UTC 09:00 清理超期记录
+[triggers]
+crons = ["0 9 * * *"]

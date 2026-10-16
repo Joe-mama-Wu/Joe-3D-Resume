@@ -4,11 +4,12 @@ Conventions for **AI coding assistants** (Claude Code / Cursor / Copilot, etc.) 
 
 ## Repo layout (read this first)
 
-The repo has three parts:
+The repo has four parts:
 
 - **[`web/`](web)** — the front-end app (every code convention in this file lives here).
 - **[`blender/`](blender)** — the 3D scene source `sen.blend` (character + camera animation + focus-anchor empties). The source you edit before exporting the glb.
 - **[`tutor/`](tutor)** — fork-it-yourself tutorials for users (deployment, stickers, …; more coming).
+- **[`analytics/`](analytics)** — optional visit logger: a Cloudflare Worker + D1 that the site pings on page / project views (client in `web/src/analytics.ts`, enabled by `VITE_ANALYTICS_URL` in `web/.env.production`). Deploy steps in `analytics/README.md`; run its npm commands inside `analytics/`.
 
 **Every code / asset path below is relative to `web/`** (e.g. `src/App.tsx` means `web/src/App.tsx`), and npm commands run inside `web/`; docs like `LICENSE` / `NOTICE` / `CLAUDE.md` sit at the repo root.
 
