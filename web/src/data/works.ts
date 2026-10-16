@@ -83,8 +83,8 @@ const worksCopy: WorksLang = {
       layout: 'grid',
       items: [
         {
-          name: 'ORCA Dexterous Hand',
-          meta: 'VLA / RL Prototype',
+          name: 'ORCA Dexterous Hand · VLA / RL Prototype',
+          meta: 'Dexterous Manipulation',
           slug: 'orca-robotic-hand',
           thumb: work('orca-robotic-hand/cover.jpg'),
           preview: work('orca-robotic-hand/cube-picking.mp4'),
