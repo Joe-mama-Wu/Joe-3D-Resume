@@ -1725,6 +1725,31 @@ canvas {
   aspect-ratio: 16 / 9;
 }
 
+/* 表格（如行为对照表） */
+.wk-md table {
+  width: 100%;
+  margin: 1.2em 0 1.8em;
+  border-collapse: collapse;
+  font-size: 0.94em;
+}
+.wk-md th,
+.wk-md td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.wk-md th {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 234, 0.45);
+}
+.wk-md td strong {
+  color: #ffd9b3;
+  font-weight: 600;
+}
+
 /* 图片灯箱 */
 .wk-lightbox {
   position: fixed;

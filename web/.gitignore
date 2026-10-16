@@ -35,6 +35,7 @@ public/works/*
 !public/works/fanuc-roboguide/
 !public/works/bytetrack-mot/
 !public/works/siamfc-sot/
+!public/works/autonomous-rc-car/
 
 # 压缩脚本日志
 scripts/compress-media.log

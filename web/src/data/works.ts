@@ -106,6 +106,12 @@ const worksCopy: WorksLang = {
       layout: 'grid',
       items: [
         {
+          name: 'Autonomous RC Car',
+          meta: 'Lane & Sign Detection',
+          slug: 'autonomous-rc-car',
+          preview: work('autonomous-rc-car/preview.mp4'),
+        },
+        {
           name: 'DeepSORT Multi-Object Tracking',
           meta: 'Multi-Object Tracking',
           slug: 'deepsort-mot',
@@ -136,7 +142,7 @@ const worksCopy: WorksLang = {
           preview: work('lane-keep-assist/demo.mp4'),
         },
       ],
-      footer: 'OpenCV · YOLO · DeepSORT · ByteTrack · SiamFC · Hough transform',
+      footer: 'OpenCV · YOLO · DeepSORT · ByteTrack · SiamFC · Hough transform · embedded vision',
     },
     {
       id: 'perception',
